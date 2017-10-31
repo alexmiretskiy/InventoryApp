@@ -23,7 +23,7 @@ public class ItemDbHelper extends SQLiteOpenHelper {
     String SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE " + ItemEntry.TABLE_NAME + " ("
         + ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
         + ItemEntry.COLUMN_ITEM_PRODUCT_NAME + " TEXT NOT NULL, "
-        + ItemEntry.COLUMN_ITEM_QUANTITY + " INTEGER NOT NULL, DEFAULT 0"
+        + ItemEntry.COLUMN_ITEM_QUANTITY + " INTEGER NOT NULL DEFAULT 0,"
         + ItemEntry.COLUMN_ITEM_PRICE + " INTEGER NOT NULL DEFAULT 0);";
 
     // Execute the SQL statement
