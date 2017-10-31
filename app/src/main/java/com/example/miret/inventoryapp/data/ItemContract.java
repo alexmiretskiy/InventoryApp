@@ -9,7 +9,7 @@ public class ItemContract {
   private ItemContract() {
   }
 
-  public static final String CONTENT_AUTHORITY = "com.example.android.inventoryapp";
+  public static final String CONTENT_AUTHORITY = "com.example.miret.inventoryapp";
 
   public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
