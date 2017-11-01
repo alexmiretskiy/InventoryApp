@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 import com.example.miret.inventoryapp.data.ItemContract.ItemEntry;
+import java.text.DecimalFormat;
 
 public class ItemCursorAdapter extends CursorAdapter {
 
@@ -38,9 +39,11 @@ public class ItemCursorAdapter extends CursorAdapter {
     String itemQuantity = cursor.getString(quantityColumnIndex);
     String itemPrice = cursor.getString(priceColumnIndex);
 
+    String formattedPrice = new DecimalFormat("##,##0$").format(Integer.parseInt(itemPrice));
+
     // Update the TextViews with the attributes for the current pet
     nameTextView.setText(itemName);
     quantityTextView.setText(itemQuantity);
-    priceTextView.setText(itemPrice);
+    priceTextView.setText(formattedPrice);
   }
 }
