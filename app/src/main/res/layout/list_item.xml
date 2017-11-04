@@ -55,7 +55,7 @@
       android:layout_height="wrap_content"
       android:layout_weight="1"
       tools:text="Sell"
-      android:text="Sell"
+      android:text="@string/button_sell"
       android:focusable="false"
       android:focusableInTouchMode="false"
       />

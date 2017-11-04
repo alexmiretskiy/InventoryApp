@@ -36,7 +36,7 @@ public class CatalogActivity extends AppCompatActivity implements
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+        Intent intent = new Intent(CatalogActivity.this, DetailActivity.class);
         startActivity(intent);
       }
     });
@@ -52,7 +52,7 @@ public class CatalogActivity extends AppCompatActivity implements
     petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+        Intent intent = new Intent(CatalogActivity.this, DetailActivity.class);
         Uri currentItemUri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, id);
         intent.setData(currentItemUri);
         startActivity(intent);

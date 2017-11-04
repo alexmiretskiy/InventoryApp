@@ -18,11 +18,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.miret.inventoryapp.data.ItemContract.ItemEntry;
+import java.text.DecimalFormat;
 
-public class EditorActivity extends AppCompatActivity implements
+public class DetailActivity extends AppCompatActivity implements
     LoaderManager.LoaderCallbacks<Cursor> {
 
   final String LOG_TAG = "myLogs";
@@ -32,9 +37,16 @@ public class EditorActivity extends AppCompatActivity implements
   private Uri mCurrentItemUri;
 
   private EditText mProductNameEditText;
+  private TextView mProductNameTextView;
 
+  private LinearLayout mQuantityCategoryLinearLayout;
+  private TextView mQuantityTextView;
   private EditText mQuantityEditText;
+  private Button mButtonDecrease;
+  private Button mButtonIncrease;
 
+  private RelativeLayout mPriceCategoryRelativeLayout;
+  private TextView mPriceTextView;
   private EditText mPriceEditText;
 
   private boolean mItemHasChanged = false;
@@ -50,27 +62,45 @@ public class EditorActivity extends AppCompatActivity implements
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_editor);
+    setContentView(R.layout.activity_detail);
 
     Intent intent = getIntent();
     mCurrentItemUri = intent.getData();
 
+    mProductNameEditText = (EditText) findViewById(R.id.edit_item_name);
+    mProductNameTextView = (TextView) findViewById(R.id.text_view_product_name);
+
+    mQuantityCategoryLinearLayout = (LinearLayout) findViewById(
+        R.id.linear_layout_quantity_category);
+    mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
+    mQuantityTextView = (TextView) findViewById(R.id.text_view_quantity);
+
+    mPriceTextView = (TextView) findViewById(R.id.text_view_display_price);
+    mPriceEditText = (EditText) findViewById(R.id.edit_item_price);
+    mPriceCategoryRelativeLayout = (RelativeLayout) findViewById(
+        R.id.relative_layout_price_category);
+
+    mProductNameEditText.setOnTouchListener(mTouchListener);
+    mQuantityEditText.setOnTouchListener(mTouchListener);
+    mPriceEditText.setOnTouchListener(mTouchListener);
+
     if (mCurrentItemUri == null) {
       setTitle(getString(R.string.editor_activity_title_new_item));
       invalidateOptionsMenu();
+
+      mProductNameTextView.setVisibility(View.GONE);
+      mProductNameEditText.setVisibility(View.VISIBLE);
+
+      mQuantityCategoryLinearLayout.setVisibility(View.GONE);
+      mQuantityEditText.setVisibility(View.VISIBLE);
+
+      mPriceTextView.setVisibility(View.GONE);
+      mPriceCategoryRelativeLayout.setVisibility(View.VISIBLE);
     } else {
       setTitle(getString(R.string.editor_activity_title_edit_item));
 
       getLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
     }
-
-    mProductNameEditText = (EditText) findViewById(R.id.edit_item_name);
-    mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
-    mPriceEditText = (EditText) findViewById(R.id.edit_item_price);
-
-    mProductNameEditText.setOnTouchListener(mTouchListener);
-    mQuantityEditText.setOnTouchListener(mTouchListener);
-    mPriceEditText.setOnTouchListener(mTouchListener);
 
     Log.e("LOG", "onCreate Editor");
   }
@@ -140,7 +170,7 @@ public class EditorActivity extends AppCompatActivity implements
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_editor, menu);
+    getMenuInflater().inflate(R.menu.menu_detail, menu);
     return true;
   }
 
@@ -149,6 +179,9 @@ public class EditorActivity extends AppCompatActivity implements
     super.onPrepareOptionsMenu(menu);
     if (mCurrentItemUri == null) {
       MenuItem menuItem = menu.findItem(R.id.action_delete);
+      menuItem.setVisible(false);
+    } else {
+      MenuItem menuItem = menu.findItem(R.id.action_save);
       menuItem.setVisible(false);
     }
 
@@ -167,7 +200,7 @@ public class EditorActivity extends AppCompatActivity implements
         return true;
       case android.R.id.home:
         if (!mItemHasChanged) {
-          NavUtils.navigateUpFromSameTask(EditorActivity.this);
+          NavUtils.navigateUpFromSameTask(DetailActivity.this);
           return true;
         }
 
@@ -175,7 +208,7 @@ public class EditorActivity extends AppCompatActivity implements
             new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialogInterface, int i) {
-                NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                NavUtils.navigateUpFromSameTask(DetailActivity.this);
               }
             };
 
@@ -236,9 +269,15 @@ public class EditorActivity extends AppCompatActivity implements
       int quantity = cursor.getInt(quantityColumnIndex);
 
       int price = cursor.getInt(priceColumnIndex);
+      String formattedPrice = new DecimalFormat("##,##0$").format(price);
 
       mProductNameEditText.setText(productName);
+      mProductNameTextView.setText(productName);
+
       mQuantityEditText.setText(Integer.toString(quantity));
+      mQuantityTextView.setText(Integer.toString(quantity));
+
+      mPriceTextView.setText(formattedPrice);
       mPriceEditText.setText(Integer.toString(price));
     }
   }
@@ -272,7 +311,7 @@ public class EditorActivity extends AppCompatActivity implements
     builder.setMessage(R.string.delete_dialog_msg);
     builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int id) {
-        deletePet();
+        deleteItem();
         finish();
       }
     });
@@ -288,7 +327,7 @@ public class EditorActivity extends AppCompatActivity implements
     alertDialog.show();
   }
 
-  private void deletePet() {
+  private void deleteItem() {
     int rowsAffected = getContentResolver().delete(mCurrentItemUri, null, null);
 
     if (rowsAffected == 0) {

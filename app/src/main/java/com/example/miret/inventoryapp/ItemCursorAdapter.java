@@ -51,7 +51,6 @@ public class ItemCursorAdapter extends CursorAdapter {
     long id = cursor.getLong(idColumnIndex);
     final Uri currentItemUri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, id);
 
-
     Button button = (Button) view.findViewById(R.id.button_sell);
     button.setOnClickListener(new OnClickListener() {
       @Override
@@ -65,7 +64,6 @@ public class ItemCursorAdapter extends CursorAdapter {
         ContentValues values = new ContentValues();
         values.put(ItemEntry.COLUMN_ITEM_QUANTITY, currentQuantity);
         int rowsAffected = context.getContentResolver().update(currentItemUri, values, null, null);
-
       }
     });
   }
