@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -42,8 +43,8 @@ public class DetailActivity extends AppCompatActivity implements
   private LinearLayout mQuantityCategoryLinearLayout;
   private TextView mQuantityTextView;
   private EditText mQuantityEditText;
-  private Button mButtonDecrease;
-  private Button mButtonIncrease;
+  private Button mDecreaseButton;
+  private Button mIncreaseButton;
 
   private RelativeLayout mPriceCategoryRelativeLayout;
   private TextView mPriceTextView;
@@ -74,6 +75,8 @@ public class DetailActivity extends AppCompatActivity implements
         R.id.linear_layout_quantity_category);
     mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
     mQuantityTextView = (TextView) findViewById(R.id.text_view_quantity);
+    mDecreaseButton = (Button) findViewById(R.id.button_decrease);
+    mIncreaseButton = (Button) findViewById(R.id.button_increase);
 
     mPriceTextView = (TextView) findViewById(R.id.text_view_display_price);
     mPriceEditText = (EditText) findViewById(R.id.edit_item_price);
@@ -266,7 +269,7 @@ public class DetailActivity extends AppCompatActivity implements
 
       String productName = cursor.getString(productNameColumnIndex);
 
-      int quantity = cursor.getInt(quantityColumnIndex);
+      final int quantity = cursor.getInt(quantityColumnIndex);
 
       int price = cursor.getInt(priceColumnIndex);
       String formattedPrice = new DecimalFormat("##,##0$").format(price);
@@ -279,6 +282,32 @@ public class DetailActivity extends AppCompatActivity implements
 
       mPriceTextView.setText(formattedPrice);
       mPriceEditText.setText(Integer.toString(price));
+
+      mDecreaseButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          int currentQuantity = quantity;
+          if (currentQuantity > 0) {
+            currentQuantity--;
+          } else {
+            currentQuantity = 0;
+          }
+          ContentValues values = new ContentValues();
+          values.put(ItemEntry.COLUMN_ITEM_QUANTITY, currentQuantity);
+          int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
+        }
+      });
+      mIncreaseButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          int currentQuantity = quantity;
+          currentQuantity++;
+          ContentValues values = new ContentValues();
+          values.put(ItemEntry.COLUMN_ITEM_QUANTITY, currentQuantity);
+          int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
+        }
+      });
+
     }
   }
 
