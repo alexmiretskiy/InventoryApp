@@ -89,7 +89,7 @@ public class EditorActivity extends AppCompatActivity implements
     Log.e(LOG_TAG, "onRestoreInstanceState");
   }
 
-  private void savePet() {
+  private void saveItem() {
     String productNameString = mProductNameEditText.getText().toString().trim();
     String quantityString = mQuantityEditText.getText().toString().trim();
     String priceString = mPriceEditText.getText().toString().trim();
@@ -159,7 +159,7 @@ public class EditorActivity extends AppCompatActivity implements
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.action_save:
-        savePet();
+        saveItem();
         finish();
         return true;
       case R.id.action_delete:

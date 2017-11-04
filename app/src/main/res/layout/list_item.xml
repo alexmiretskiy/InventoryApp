@@ -13,6 +13,7 @@
 <!-- Layout for a single list item in the list of pets -->
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:padding="@dimen/activity_margin"
@@ -25,12 +26,12 @@
     >
     <TextView
       style="@style/ListItemCategoryStyle"
-      android:text="Product name"
+      android:text="@string/text_view_product_name"
       />
     <TextView
       android:id="@+id/name"
       style="@style/ListItemFieldStyle"
-      android:text="Pencil with big black balls and boobs"
+      tools:text="Pencil with big black balls and boobs"
       />
   </LinearLayout>
   <LinearLayout
@@ -40,12 +41,23 @@
     >
     <TextView
       style="@style/ListItemCategoryStyle"
-      android:text="Quantity"
+      android:text="@string/text_view_quantity"
       />
     <TextView
       android:id="@+id/quantity"
       style="@style/ListItemFieldStyle"
-      android:text="1"
+      android:layout_weight="1"
+      tools:text="1"
+      />
+    <Button
+      android:id="@+id/button_sell"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      tools:text="Sell"
+      android:text="Sell"
+      android:focusable="false"
+      android:focusableInTouchMode="false"
       />
   </LinearLayout>
   <LinearLayout
@@ -55,12 +67,12 @@
     >
     <TextView
       style="@style/ListItemCategoryStyle"
-      android:text="Price"
+      android:text="@string/text_view_price"
       />
     <TextView
       android:id="@+id/price"
       style="@style/ListItemFieldStyle"
-      android:text="17"
+      tools:text="17"
       />
   </LinearLayout>
 </LinearLayout>

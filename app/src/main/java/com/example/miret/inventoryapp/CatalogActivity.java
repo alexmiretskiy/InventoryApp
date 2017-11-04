@@ -53,8 +53,8 @@ public class CatalogActivity extends AppCompatActivity implements
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
-        Uri currentPetUri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, id);
-        intent.setData(currentPetUri);
+        Uri currentItemUri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, id);
+        intent.setData(currentItemUri);
         startActivity(intent);
       }
     });

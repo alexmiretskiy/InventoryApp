@@ -30,4 +30,7 @@
   <string name="catalog_activity_delete_all_items_successful">All items deleted</string>
   <string name="catalog_activity_delete_all_items_failed">Error with deleting all items</string>
   <string name="pet_cursor_adapter_unknown_breed">Unknown breed</string>
+  <string name="text_view_product_name">Product name</string>
+  <string name="text_view_quantity">Quantity</string>
+  <string name="text_view_price">Price</string>
 </resources>

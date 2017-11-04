@@ -33,6 +33,6 @@ public class ItemContract {
 
     public final static String COLUMN_ITEM_QUANTITY = "quantity";
 
-    public final static String COLUMN_ITEM_PRICE = "weight";
+    public final static String COLUMN_ITEM_PRICE = "price";
   }
 }
