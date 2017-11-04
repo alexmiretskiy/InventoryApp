@@ -131,12 +131,6 @@ public class DetailActivity extends AppCompatActivity implements
     String fieldQuantity = "";
     String fieldPrice = "";
 
-//    if (mCurrentItemUri == null &&
-//        TextUtils.isEmpty(productNameString) && TextUtils.isEmpty(quantityString) &&
-//        TextUtils.isEmpty(priceString)) {
-//      return;
-//    }
-
     ContentValues values = new ContentValues();
     if (!TextUtils.isEmpty(productNameString)) {
       values.put(ItemEntry.COLUMN_ITEM_PRODUCT_NAME, productNameString);
@@ -161,15 +155,20 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     if (mCurrentItemUri == null) {
-      if (!TextUtils.isEmpty(productNameString) && !TextUtils.isEmpty(quantityString) && !TextUtils
-          .isEmpty(priceString)) {
+      if (!TextUtils.isEmpty(productNameString) && !TextUtils.isEmpty(quantityString)
+          && !TextUtils.isEmpty(priceString)) {
         Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
         mAllItemFieldIsNotEmpty = true;
       } else {
         mAllItemFieldIsNotEmpty = false;
-        Toast.makeText(this,
-            "Please fill in the field " + fieldProductName + fieldQuantity + fieldPrice,
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+            this,
+            "Please fill in the field "
+                + fieldProductName
+                + fieldQuantity
+                + fieldPrice,
+            Toast.LENGTH_SHORT
+        ).show();
       }
     } else {
       int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
@@ -194,8 +193,10 @@ public class DetailActivity extends AppCompatActivity implements
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
     if (mCurrentItemUri == null) {
-      MenuItem menuItem = menu.findItem(R.id.action_delete);
-      menuItem.setVisible(false);
+      MenuItem itemDelete = menu.findItem(R.id.action_delete);
+      itemDelete.setVisible(false);
+      MenuItem itemOrderMore = menu.findItem(R.id.action_order_more);
+      itemOrderMore.setVisible(false);
     } else {
       MenuItem menuItem = menu.findItem(R.id.action_save);
       menuItem.setVisible(false);
@@ -216,6 +217,9 @@ public class DetailActivity extends AppCompatActivity implements
       case R.id.action_delete:
         showDeleteConfirmationDialog();
         return true;
+      case R.id.action_order_more:
+        showEmailApp();
+        return true;
       case android.R.id.home:
         if (!mItemHasChanged) {
           NavUtils.navigateUpFromSameTask(DetailActivity.this);
@@ -234,6 +238,12 @@ public class DetailActivity extends AppCompatActivity implements
         return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  private void showEmailApp() {
+    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+    emailIntent.setType("plain/text");
+    startActivity(emailIntent);
   }
 
   @Override
