@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity implements
   private EditText mPriceEditText;
 
   private boolean mItemHasChanged = false;
-
+  private boolean mAllItemFieldIsNotEmpty = true;
   private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -127,37 +127,59 @@ public class DetailActivity extends AppCompatActivity implements
     String quantityString = mQuantityEditText.getText().toString().trim();
     String priceString = mPriceEditText.getText().toString().trim();
 
-    if (mCurrentItemUri == null &&
-        TextUtils.isEmpty(productNameString) && TextUtils.isEmpty(quantityString) &&
-        TextUtils.isEmpty(priceString)) {
-      return;
-    }
+    String fieldProductName = "";
+    String fieldQuantity = "";
+    String fieldPrice = "";
+
+//    if (mCurrentItemUri == null &&
+//        TextUtils.isEmpty(productNameString) && TextUtils.isEmpty(quantityString) &&
+//        TextUtils.isEmpty(priceString)) {
+//      return;
+//    }
 
     ContentValues values = new ContentValues();
-    values.put(ItemEntry.COLUMN_ITEM_PRODUCT_NAME, productNameString);
-
-    int quantity = 0;
-    if (!TextUtils.isEmpty(priceString)) {
-      quantity = Integer.parseInt(quantityString);
+    if (!TextUtils.isEmpty(productNameString)) {
+      values.put(ItemEntry.COLUMN_ITEM_PRODUCT_NAME, productNameString);
+    } else {
+      fieldProductName = "(Product name)";
     }
-    values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
 
-    int price = 0;
+    int quantity;
+    if (!TextUtils.isEmpty(quantityString)) {
+      quantity = Integer.parseInt(quantityString);
+      values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
+    } else {
+      fieldQuantity = " (Quantity)";
+    }
+
+    int price;
     if (!TextUtils.isEmpty(priceString)) {
       price = Integer.parseInt(priceString);
+      values.put(ItemEntry.COLUMN_ITEM_PRICE, price);
+    } else {
+      fieldPrice = " (Price)";
     }
-    values.put(ItemEntry.COLUMN_ITEM_PRICE, price);
 
     if (mCurrentItemUri == null) {
-      Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
-
-      if (newUri == null) {
-        Toast.makeText(this, getString(R.string.editor_insert_item_failed),
-            Toast.LENGTH_SHORT).show();
+      Uri newUri = null;
+      if (!TextUtils.isEmpty(productNameString) && !TextUtils.isEmpty(quantityString) && !TextUtils
+          .isEmpty(priceString)) {
+        newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
+        mAllItemFieldIsNotEmpty = true;
       } else {
-        Toast.makeText(this, getString(R.string.editor_insert_item_successful),
+        mAllItemFieldIsNotEmpty = false;
+        Toast.makeText(this,
+            "Please fill in the field " + fieldProductName + fieldQuantity + fieldPrice,
             Toast.LENGTH_SHORT).show();
       }
+
+//      if (newUri == null) {
+//        Toast.makeText(this, getString(R.string.editor_insert_item_failed),
+//            Toast.LENGTH_SHORT).show();
+//      } else {
+//        Toast.makeText(this, getString(R.string.editor_insert_item_successful),
+//            Toast.LENGTH_SHORT).show();
+//      }
     } else {
       int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
 
@@ -196,7 +218,9 @@ public class DetailActivity extends AppCompatActivity implements
     switch (item.getItemId()) {
       case R.id.action_save:
         saveItem();
-        finish();
+        if (mAllItemFieldIsNotEmpty) {
+          finish();
+        }
         return true;
       case R.id.action_delete:
         showDeleteConfirmationDialog();
@@ -307,7 +331,6 @@ public class DetailActivity extends AppCompatActivity implements
           int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
         }
       });
-
     }
   }
 

@@ -28,7 +28,7 @@
     >
     <TextView
       style="@style/CategoryStyle"
-      android:text="@string/category_overview"
+      android:text="@string/category_product_name"
       />
     <EditText
       android:id="@+id/edit_item_name"

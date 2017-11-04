@@ -25,20 +25,23 @@
       android:layout_centerHorizontal="true"
       android:paddingTop="16dp"
       android:fontFamily="sans-serif-medium"
-      android:text="@string/empty_view_title_text"
+      android:text="@string/empty_view_subtitle_text"
       android:textAppearance="?android:textAppearanceMedium"
       />
     <TextView
       android:id="@+id/empty_subtitle_text"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/empty_title_text"
       android:layout_centerHorizontal="true"
       android:paddingTop="8dp"
+      android:paddingStart="16dp"
+      android:paddingLeft="16dp"
       android:fontFamily="sans-serif"
-      android:text="@string/empty_view_subtitle_text"
+      android:text="@string/empty_view_title_text"
       android:textAppearance="?android:textAppearanceSmall"
       android:textColor="#A2AAB0"
+      tools:ignore="RtlSymmetry"
       />
   </RelativeLayout>
   <android.support.design.widget.FloatingActionButton
@@ -47,6 +50,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/fab_margin"
     android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
     android:layout_alignParentRight="true"
     android:src="@drawable/ic_add_white_18dp"
     />
