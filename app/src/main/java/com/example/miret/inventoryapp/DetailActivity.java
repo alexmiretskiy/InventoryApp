@@ -161,10 +161,9 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     if (mCurrentItemUri == null) {
-      Uri newUri = null;
       if (!TextUtils.isEmpty(productNameString) && !TextUtils.isEmpty(quantityString) && !TextUtils
           .isEmpty(priceString)) {
-        newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
+        Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
         mAllItemFieldIsNotEmpty = true;
       } else {
         mAllItemFieldIsNotEmpty = false;
@@ -172,14 +171,6 @@ public class DetailActivity extends AppCompatActivity implements
             "Please fill in the field " + fieldProductName + fieldQuantity + fieldPrice,
             Toast.LENGTH_SHORT).show();
       }
-
-//      if (newUri == null) {
-//        Toast.makeText(this, getString(R.string.editor_insert_item_failed),
-//            Toast.LENGTH_SHORT).show();
-//      } else {
-//        Toast.makeText(this, getString(R.string.editor_insert_item_successful),
-//            Toast.LENGTH_SHORT).show();
-//      }
     } else {
       int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
 
