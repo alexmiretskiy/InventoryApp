@@ -17,7 +17,7 @@ import java.text.DecimalFormat;
 
 public class ItemCursorAdapter extends CursorAdapter {
 
-  public ItemCursorAdapter(Context context, Cursor c) {
+   ItemCursorAdapter(Context context, Cursor c) {
     super(context, c, 0 /* flags */);
   }
 
@@ -28,9 +28,9 @@ public class ItemCursorAdapter extends CursorAdapter {
 
   @Override
   public void bindView(View view, final Context context, Cursor cursor) {
-    TextView nameTextView = (TextView) view.findViewById(R.id.name);
-    TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
-    TextView priceTextView = (TextView) view.findViewById(R.id.price);
+    TextView nameTextView = view.findViewById(R.id.name);
+    TextView quantityTextView = view.findViewById(R.id.quantity);
+    TextView priceTextView = view.findViewById(R.id.price);
 
     int nameColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_PRODUCT_NAME);
     int quantityColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_QUANTITY);
@@ -51,7 +51,7 @@ public class ItemCursorAdapter extends CursorAdapter {
     long id = cursor.getLong(idColumnIndex);
     final Uri currentItemUri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, id);
 
-    Button button = (Button) view.findViewById(R.id.button_sell);
+    Button button = view.findViewById(R.id.button_sell);
     button.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -63,7 +63,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         }
         ContentValues values = new ContentValues();
         values.put(ItemEntry.COLUMN_ITEM_QUANTITY, currentQuantity);
-        int rowsAffected = context.getContentResolver().update(currentItemUri, values, null, null);
+        context.getContentResolver().update(currentItemUri, values, null, null);
       }
     });
   }
