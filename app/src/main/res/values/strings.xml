@@ -36,4 +36,6 @@
   <string name="text_view_price">Price</string>
   <string name="button_sell">Sell</string>
   <string name="action_order_more">Order more</string>
+  <string name="button_increase">+</string>
+  <string name="button_decrease">-</string>
 </resources>

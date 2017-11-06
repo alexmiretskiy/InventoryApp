@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.miret.inventoryapp.data.ItemContract.ItemEntry;
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity implements
     LoaderManager.LoaderCallbacks<Cursor> {
@@ -40,13 +41,11 @@ public class DetailActivity extends AppCompatActivity implements
   private EditText mProductNameEditText;
   private TextView mProductNameTextView;
 
-  private LinearLayout mQuantityCategoryLinearLayout;
   private TextView mQuantityTextView;
   private EditText mQuantityEditText;
   private Button mDecreaseButton;
   private Button mIncreaseButton;
 
-  private RelativeLayout mPriceCategoryRelativeLayout;
   private TextView mPriceTextView;
   private EditText mPriceEditText;
 
@@ -55,8 +54,16 @@ public class DetailActivity extends AppCompatActivity implements
   private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-      mItemHasChanged = true;
-      return false;
+      switch (motionEvent.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+          mItemHasChanged = true;
+          return false;
+        case MotionEvent.ACTION_UP:
+          view.performClick();
+          return false;
+        default:
+          return false;
+      }
     }
   };
 
@@ -68,20 +75,18 @@ public class DetailActivity extends AppCompatActivity implements
     Intent intent = getIntent();
     mCurrentItemUri = intent.getData();
 
-    mProductNameEditText = (EditText) findViewById(R.id.edit_item_name);
-    mProductNameTextView = (TextView) findViewById(R.id.text_view_product_name);
+    mProductNameEditText = findViewById(R.id.edit_item_name);
+    mProductNameTextView = findViewById(R.id.text_view_product_name);
 
-    mQuantityCategoryLinearLayout = (LinearLayout) findViewById(
-        R.id.linear_layout_quantity_category);
-    mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
-    mQuantityTextView = (TextView) findViewById(R.id.text_view_quantity);
-    mDecreaseButton = (Button) findViewById(R.id.button_decrease);
-    mIncreaseButton = (Button) findViewById(R.id.button_increase);
+    LinearLayout mQuantityCategoryLinearLayout = findViewById(R.id.linear_layout_quantity_category);
+    mQuantityEditText = findViewById(R.id.edit_quantity);
+    mQuantityTextView = findViewById(R.id.text_view_quantity);
+    mDecreaseButton = findViewById(R.id.button_decrease);
+    mIncreaseButton = findViewById(R.id.button_increase);
 
-    mPriceTextView = (TextView) findViewById(R.id.text_view_display_price);
-    mPriceEditText = (EditText) findViewById(R.id.edit_item_price);
-    mPriceCategoryRelativeLayout = (RelativeLayout) findViewById(
-        R.id.relative_layout_price_category);
+    mPriceTextView = findViewById(R.id.text_view_display_price);
+    mPriceEditText = findViewById(R.id.edit_item_price);
+    RelativeLayout mPriceCategoryRelativeLayout = findViewById(R.id.relative_layout_price_category);
 
     mProductNameEditText.setOnTouchListener(mTouchListener);
     mQuantityEditText.setOnTouchListener(mTouchListener);
@@ -135,7 +140,7 @@ public class DetailActivity extends AppCompatActivity implements
     if (!TextUtils.isEmpty(productNameString)) {
       values.put(ItemEntry.COLUMN_ITEM_PRODUCT_NAME, productNameString);
     } else {
-      fieldProductName = "(Product name)";
+      fieldProductName = "Product name.";
     }
 
     int quantity;
@@ -143,7 +148,10 @@ public class DetailActivity extends AppCompatActivity implements
       quantity = Integer.parseInt(quantityString);
       values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
     } else {
-      fieldQuantity = " (Quantity)";
+      fieldQuantity = " Quantity.";
+      if (TextUtils.isEmpty(productNameString)) {
+        fieldProductName = "Product name,";
+      }
     }
 
     int price;
@@ -151,13 +159,19 @@ public class DetailActivity extends AppCompatActivity implements
       price = Integer.parseInt(priceString);
       values.put(ItemEntry.COLUMN_ITEM_PRICE, price);
     } else {
-      fieldPrice = " (Price)";
+      fieldPrice = " Price.";
+      if (TextUtils.isEmpty(productNameString)) {
+        fieldProductName = "Product name,";
+      }
+      if (TextUtils.isEmpty(quantityString)) {
+        fieldQuantity = " Quantity,";
+      }
     }
 
     if (mCurrentItemUri == null) {
       if (!TextUtils.isEmpty(productNameString) && !TextUtils.isEmpty(quantityString)
           && !TextUtils.isEmpty(priceString)) {
-        Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
+        getContentResolver().insert(ItemEntry.CONTENT_URI, values);
         mAllItemFieldIsNotEmpty = true;
       } else {
         mAllItemFieldIsNotEmpty = false;
@@ -302,11 +316,11 @@ public class DetailActivity extends AppCompatActivity implements
       mProductNameEditText.setText(productName);
       mProductNameTextView.setText(productName);
 
-      mQuantityEditText.setText(Integer.toString(quantity));
-      mQuantityTextView.setText(Integer.toString(quantity));
+      mQuantityEditText.setText(String.format(Locale.US, "%d", quantity));
+      mQuantityTextView.setText(String.format(Locale.US, "%d", quantity));
 
       mPriceTextView.setText(formattedPrice);
-      mPriceEditText.setText(Integer.toString(price));
+      mPriceEditText.setText(String.format(Locale.US, "%d", price));
 
       mDecreaseButton.setOnClickListener(new OnClickListener() {
         @Override
@@ -319,7 +333,7 @@ public class DetailActivity extends AppCompatActivity implements
           }
           ContentValues values = new ContentValues();
           values.put(ItemEntry.COLUMN_ITEM_QUANTITY, currentQuantity);
-          int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
+          getContentResolver().update(mCurrentItemUri, values, null, null);
         }
       });
       mIncreaseButton.setOnClickListener(new OnClickListener() {
@@ -329,7 +343,7 @@ public class DetailActivity extends AppCompatActivity implements
           currentQuantity++;
           ContentValues values = new ContentValues();
           values.put(ItemEntry.COLUMN_ITEM_QUANTITY, currentQuantity);
-          int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
+          getContentResolver().update(mCurrentItemUri, values, null, null);
         }
       });
     }

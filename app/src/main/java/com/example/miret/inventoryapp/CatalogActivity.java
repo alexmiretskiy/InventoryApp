@@ -32,7 +32,7 @@ public class CatalogActivity extends AppCompatActivity implements
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_catalog);
-    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+    FloatingActionButton fab = findViewById(R.id.fab);
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -41,7 +41,7 @@ public class CatalogActivity extends AppCompatActivity implements
       }
     });
 
-    ListView petListView = (ListView) findViewById(R.id.list);
+    ListView petListView = findViewById(R.id.list);
 
     View emptyView = findViewById(R.id.empty_view);
     petListView.setEmptyView(emptyView);
@@ -71,7 +71,7 @@ public class CatalogActivity extends AppCompatActivity implements
     values.put(ItemEntry.COLUMN_ITEM_QUANTITY, 1);
     values.put(ItemEntry.COLUMN_ITEM_PRICE, 7000000);
 
-    Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
+    getContentResolver().insert(ItemEntry.CONTENT_URI, values);
   }
 
   private void deleteAllItems() {
